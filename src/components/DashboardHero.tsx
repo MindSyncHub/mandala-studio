@@ -9,10 +9,10 @@ const DashboardHero = () => {
     <div className="relative overflow-hidden rounded-2xl animate-fade-in" style={{ backgroundColor: 'hsl(45, 80%, 92%)' }}>
       <div className="relative z-10 p-8 md:p-10">
         <div className="max-w-2xl">
-          <h1 className="text-3xl font-bold text-primary-foreground mb-2">
+           <h1 className="text-3xl font-bold text-foreground mb-2">
             欢迎回来，疗愈师 ✨
           </h1>
-          <p className="text-primary-foreground/80 mb-6">
+          <p className="text-muted-foreground mb-6">
             曼陀罗是通向内心世界的窗口。今天，让我们一起探索色彩与形状背后的心灵密语。
           </p>
           <div className="flex gap-3">
