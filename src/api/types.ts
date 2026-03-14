@@ -51,6 +51,18 @@ export interface ReportResponse {
   error?: string;
 }
 
+// ── Upgrade ─────────────────────────────────────────
+
+export interface UpgradeRequest {
+  model: string;
+}
+
+export interface UpgradeResponse {
+  success: boolean;
+  interpretation_id: string;
+  error?: string;
+}
+
 // ── Therapist Notes ──────────────────────────────────
 
 export interface TherapistPhase {
