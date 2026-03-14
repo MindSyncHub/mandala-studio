@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, Loader2, ChevronDown, Stethoscope, ArrowUpCircle } from "lucide-react";
+import { ArrowLeft, Loader2, ChevronDown, Stethoscope, ArrowUpCircle, ImagePlus } from "lucide-react";
 import { getReport, getTherapistNotes, upgradeToPro, ApiError } from "@/api";
 import type { ReportResponse, TherapistNotesResponse } from "@/api/types";
 import { toast } from "@/hooks/use-toast";
