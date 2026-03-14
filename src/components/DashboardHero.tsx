@@ -6,7 +6,7 @@ const DashboardHero = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative overflow-hidden rounded-2xl animate-fade-in bg-amber-50">
+    <div className="relative overflow-hidden rounded-2xl animate-fade-in" style={{ backgroundColor: 'hsl(45, 80%, 92%)' }}>
       <div className="relative z-10 p-8 md:p-10">
         <div className="max-w-2xl">
           <h1 className="text-3xl font-bold text-primary-foreground mb-2">
