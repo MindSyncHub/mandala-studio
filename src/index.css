@@ -6,26 +6,26 @@
 
 @layer base {
   :root {
-    --background: 30 25% 96%;
-    --foreground: 20 20% 15%;
+    --background: 30 25% 97%;
+    --foreground: 25 20% 15%;
 
-    --card: 30 20% 98%;
-    --card-foreground: 20 20% 15%;
+    --card: 30 20% 95%;
+    --card-foreground: 25 20% 15%;
 
-    --popover: 30 20% 98%;
-    --popover-foreground: 20 20% 15%;
+    --popover: 30 20% 95%;
+    --popover-foreground: 25 20% 15%;
 
     --primary: 16 45% 50%;
     --primary-foreground: 30 25% 97%;
 
     --secondary: 140 18% 45%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary-foreground: 30 25% 97%;
 
     --muted: 30 15% 92%;
-    --muted-foreground: 20 10% 45%;
+    --muted-foreground: 25 10% 45%;
 
-    --accent: 38 60% 55%;
-    --accent-foreground: 20 20% 15%;
+    --accent: 35 40% 85%;
+    --accent-foreground: 25 20% 15%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
@@ -37,64 +37,80 @@
     --radius: 0.75rem;
 
     --sidebar-background: 30 20% 97%;
-    --sidebar-foreground: 20 15% 30%;
+    --sidebar-foreground: 25 15% 30%;
     --sidebar-primary: 16 45% 50%;
     --sidebar-primary-foreground: 30 25% 97%;
-    --sidebar-accent: 30 18% 93%;
-    --sidebar-accent-foreground: 20 15% 30%;
+    --sidebar-accent: 35 40% 85%;
+    --sidebar-accent-foreground: 25 15% 30%;
     --sidebar-border: 30 15% 90%;
     --sidebar-ring: 16 45% 50%;
 
     --terracotta: 16 45% 50%;
+    --terracotta-light: 16 45% 70%;
     --sage: 140 18% 45%;
+    --sage-light: 140 18% 80%;
     --golden: 38 60% 55%;
-    --warm-beige: 30 25% 96%;
-    --deep-earth: 20 30% 25%;
+    --warm-beige: 35 40% 85%;
+    --deep-earth: 25 30% 25%;
+
+    --gradient-mandala: linear-gradient(135deg, hsl(16 45% 50%) 0%, hsl(38 60% 55%) 50%, hsl(140 18% 45%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(16 45% 50% / 0.1) 0%, hsl(38 60% 55% / 0.08) 50%, hsl(140 18% 45% / 0.06) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(30 20% 95%) 0%, hsl(16 45% 50% / 0.04) 100%);
+    --shadow-soft: 0 4px 20px -4px hsl(25 20% 15% / 0.08);
+    --shadow-warm: 0 8px 30px -6px hsl(25 20% 15% / 0.12);
   }
 
   .dark {
-    --background: 20 20% 10%;
+    --background: 25 20% 10%;
     --foreground: 30 15% 90%;
 
-    --card: 20 18% 14%;
+    --card: 25 18% 14%;
     --card-foreground: 30 15% 90%;
 
-    --popover: 20 18% 14%;
+    --popover: 25 18% 14%;
     --popover-foreground: 30 15% 90%;
 
     --primary: 16 50% 55%;
-    --primary-foreground: 20 20% 10%;
+    --primary-foreground: 25 20% 10%;
 
     --secondary: 140 15% 35%;
     --secondary-foreground: 30 15% 90%;
 
-    --muted: 20 15% 18%;
+    --muted: 25 15% 18%;
     --muted-foreground: 30 10% 55%;
 
-    --accent: 38 55% 50%;
+    --accent: 35 30% 25%;
     --accent-foreground: 30 15% 90%;
 
     --destructive: 0 62% 35%;
     --destructive-foreground: 30 15% 90%;
 
-    --border: 20 15% 20%;
-    --input: 20 15% 20%;
+    --border: 25 15% 20%;
+    --input: 25 15% 20%;
     --ring: 16 50% 55%;
 
-    --sidebar-background: 20 18% 12%;
+    --sidebar-background: 25 18% 12%;
     --sidebar-foreground: 30 15% 85%;
     --sidebar-primary: 16 50% 55%;
-    --sidebar-primary-foreground: 20 20% 10%;
-    --sidebar-accent: 20 15% 18%;
+    --sidebar-primary-foreground: 25 20% 10%;
+    --sidebar-accent: 35 30% 25%;
     --sidebar-accent-foreground: 30 15% 85%;
-    --sidebar-border: 20 15% 18%;
+    --sidebar-border: 25 15% 18%;
     --sidebar-ring: 16 50% 55%;
 
     --terracotta: 16 50% 55%;
+    --terracotta-light: 16 45% 40%;
     --sage: 140 15% 35%;
+    --sage-light: 140 15% 25%;
     --golden: 38 55% 50%;
-    --warm-beige: 20 20% 10%;
+    --warm-beige: 25 20% 10%;
     --deep-earth: 30 15% 85%;
+
+    --gradient-mandala: linear-gradient(135deg, hsl(16 50% 55%) 0%, hsl(38 55% 50%) 50%, hsl(140 15% 35%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(16 50% 55% / 0.1) 0%, hsl(38 55% 50% / 0.08) 50%, hsl(140 15% 35% / 0.06) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(25 18% 14%) 0%, hsl(16 50% 55% / 0.04) 100%);
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.2);
+    --shadow-warm: 0 8px 30px -6px hsl(0 0% 0% / 0.3);
   }
 }
 
@@ -105,36 +121,25 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Serif SC', Georgia, serif;
+  }
 }
 
 @layer utilities {
   .mandala-gradient {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--terracotta)) 0%,
-      hsl(var(--golden)) 50%,
-      hsl(var(--sage)) 100%
-    );
+    background: var(--gradient-mandala);
   }
   .warm-gradient {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--terracotta) / 0.1) 0%,
-      hsl(var(--golden) / 0.08) 50%,
-      hsl(var(--sage) / 0.06) 100%
-    );
+    background: var(--gradient-warm);
   }
   .card-gradient {
-    background: linear-gradient(
-      145deg,
-      hsl(var(--card)) 0%,
-      hsl(var(--terracotta) / 0.04) 100%
-    );
+    background: var(--gradient-card);
   }
   .shadow-soft {
-    box-shadow: 0 4px 20px -4px hsl(var(--terracotta) / 0.1);
+    box-shadow: var(--shadow-soft);
   }
   .shadow-warm {
-    box-shadow: 0 8px 30px -6px hsl(var(--terracotta) / 0.15);
+    box-shadow: var(--shadow-warm);
   }
 }
