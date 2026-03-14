@@ -258,6 +258,14 @@ const Report = () => {
           </CollapsibleContent>
         </Card>
       </Collapsible>
+
+      {/* ── Try Again ── */}
+      <div className="flex justify-center pt-2 pb-8">
+        <Button size="lg" onClick={() => navigate("/interpret")} className="gap-2">
+          <ImagePlus className="h-5 w-5" />
+          再测一幅
+        </Button>
+      </div>
     </div>
   );
 };
