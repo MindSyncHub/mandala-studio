@@ -55,18 +55,20 @@ export interface ReportResponse {
 
 export interface TherapistPhase {
   name: string;
-  description: string;
-  techniques: string[];
-  duration?: string;
+  goals: string[];
+  tasks: string[];
+  dialogue_examples: string[];
 }
 
 export interface TherapistNotesResponse {
   interpretation_id: string;
+  program_name: string;
+  description: string;
+  painting_focus: string;
+  core_intervention: string;
   phases: TherapistPhase[];
   observation_checklist: string[];
   contraindications: string[];
-  recommended_frequency?: string;
-  notes?: string;
 }
 
 // ── Detect Circles ───────────────────────────────────
