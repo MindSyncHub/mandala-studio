@@ -1,19 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/mandala-hero.jpg";
 
 const DashboardHero = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative overflow-hidden rounded-2xl animate-fade-in">
-      <img
-        src={heroImage}
-        alt="曼陀罗"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 bg-foreground/60" />
+    <div className="relative overflow-hidden rounded-2xl animate-fade-in bg-amber-50">
       <div className="relative z-10 p-8 md:p-10">
         <div className="max-w-2xl">
           <h1 className="text-3xl font-bold text-primary-foreground mb-2">
