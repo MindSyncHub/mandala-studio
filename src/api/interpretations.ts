@@ -5,6 +5,7 @@ import type {
   ReportResponse,
   ReportVersion,
   TherapistNotesResponse,
+  UpgradeResponse,
 } from './types';
 
 export function createInterpretation(
@@ -17,6 +18,7 @@ export function createInterpretation(
   if (params.painting_intention) form.append('painting_intention', params.painting_intention);
   if (params.painting_feeling) form.append('painting_feeling', params.painting_feeling);
   if (params.force_new !== undefined) form.append('force_new', String(params.force_new));
+  if (params.three_circles) form.append('three_circles', params.three_circles);
 
   return apiClient.postForm<CreateInterpretationResponse>('/api/v2/interpretations', form);
 }
@@ -38,5 +40,14 @@ export function getTherapistNotes(
 ): Promise<TherapistNotesResponse> {
   return apiClient.get<TherapistNotesResponse>(
     `/api/v2/interpretations/${interpretationId}/therapist-notes`,
+  );
+}
+
+export function upgradeToPro(
+  interpretationId: string,
+): Promise<UpgradeResponse> {
+  return apiClient.post<UpgradeResponse>(
+    `/api/v2/interpretations/${interpretationId}/upgrade`,
+    { model: 'kimi' },
   );
 }

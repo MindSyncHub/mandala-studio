@@ -21,6 +21,7 @@ export interface CreateInterpretationParams {
   painting_intention?: string;
   painting_feeling?: string;
   force_new?: boolean;
+  three_circles?: string;
 }
 
 export interface CreateInterpretationResponse {
