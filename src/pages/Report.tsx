@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, Loader2, ChevronDown, Stethoscope } from "lucide-react";
-import { getReport, getTherapistNotes, ApiError } from "@/api";
+import { ArrowLeft, Loader2, ChevronDown, Stethoscope, ArrowUpCircle } from "lucide-react";
+import { getReport, getTherapistNotes, upgradeToPro, ApiError } from "@/api";
 import type { ReportResponse, TherapistNotesResponse } from "@/api/types";
+import { toast } from "@/hooks/use-toast";
 
 const Report = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ const Report = () => {
   const [report, setReport] = useState<ReportResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [upgrading, setUpgrading] = useState(false);
 
   // Therapist notes (lazy)
   const [notesOpen, setNotesOpen] = useState(false);
@@ -23,14 +25,35 @@ const Report = () => {
   const [notesError, setNotesError] = useState<string | null>(null);
   const [notesFetched, setNotesFetched] = useState(false);
 
+  const fetchReport = useCallback(
+    (version?: "lite" | "pro") => {
+      if (!id) return;
+      setLoading(true);
+      getReport(id, version)
+        .then(setReport)
+        .catch(() => setError("无法加载报告，请稍后重试"))
+        .finally(() => setLoading(false));
+    },
+    [id],
+  );
+
   useEffect(() => {
+    fetchReport();
+  }, [fetchReport]);
+
+  const handleUpgrade = async () => {
     if (!id) return;
-    setLoading(true);
-    getReport(id)
-      .then(setReport)
-      .catch(() => setError("无法加载报告，请稍后重试"))
-      .finally(() => setLoading(false));
-  }, [id]);
+    setUpgrading(true);
+    try {
+      await upgradeToPro(id);
+      await getReport(id, "pro").then(setReport);
+      toast({ title: "已升级到 Pro 版本" });
+    } catch {
+      toast({ title: "升级失败", description: "请稍后重试", variant: "destructive" });
+    } finally {
+      setUpgrading(false);
+    }
+  };
 
   const handleNotesToggle = useCallback(
     (open: boolean) => {
@@ -85,15 +108,34 @@ const Report = () => {
       {/* ── Report Card ── */}
       <Card className="card-gradient shadow-soft">
         <CardHeader>
-          <CardTitle className="font-serif text-xl">
-            {report.title ?? "解读报告"}
-          </CardTitle>
-          <p className="text-xs text-muted-foreground">
-            版本：{report.version}
-            {report.can_upgrade && report.upgrade_price != null && (
-              <span className="ml-2">· 可升级至 Pro（¥{report.upgrade_price}）</span>
+          <div className="flex items-start justify-between">
+            <div>
+              <CardTitle className="font-serif text-xl">
+                {report.title ?? "解读报告"}
+              </CardTitle>
+              <p className="text-xs text-muted-foreground mt-1">
+                版本：{report.version}
+                {report.can_upgrade && report.upgrade_price != null && (
+                  <span className="ml-2">· 可升级至 Pro（¥{report.upgrade_price}）</span>
+                )}
+              </p>
+            </div>
+            {report.can_upgrade && (
+              <Button
+                size="sm"
+                onClick={handleUpgrade}
+                disabled={upgrading}
+                className="gap-1.5 shrink-0"
+              >
+                {upgrading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowUpCircle className="h-4 w-4" />
+                )}
+                升级到 Pro
+              </Button>
             )}
-          </p>
+          </div>
         </CardHeader>
         <CardContent>
           {report.error ? (
@@ -137,7 +179,6 @@ const Report = () => {
 
               {notes && (
                 <>
-                  {/* Meta */}
                   <div className="space-y-2">
                     <h3 className="font-semibold text-lg">{notes.program_name}</h3>
                     <p className="text-sm text-muted-foreground">{notes.description}</p>
@@ -154,7 +195,6 @@ const Report = () => {
                     </div>
                   </div>
 
-                  {/* Phases */}
                   {notes.phases.length > 0 && (
                     <div className="space-y-2">
                       <h4 className="font-medium">疗愈阶段</h4>
@@ -194,7 +234,6 @@ const Report = () => {
                     </div>
                   )}
 
-                  {/* Checklist & Contraindications */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     {notes.observation_checklist.length > 0 && (
                       <div className="space-y-1">
