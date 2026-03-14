@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import AiInterpret from "./pages/AiInterpret";
+import Report from "./pages/Report";
 import HistoryPage from "./pages/History";
 import Clients from "./pages/Clients";
 import Schedule from "./pages/Schedule";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/cases" element={<Cases />} />
             <Route path="/plans" element={<Plans />} />
             <Route path="/interpret" element={<AiInterpret />} />
+            <Route path="/report/:id" element={<Report />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
