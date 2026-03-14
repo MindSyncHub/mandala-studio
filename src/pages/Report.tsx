@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowLeft, Loader2, ChevronDown, Stethoscope, ArrowUpCircle } from "lucide-react";
+import { ArrowLeft, Loader2, ChevronDown, Stethoscope, ArrowUpCircle, ImagePlus } from "lucide-react";
 import { getReport, getTherapistNotes, upgradeToPro, ApiError } from "@/api";
 import type { ReportResponse, TherapistNotesResponse } from "@/api/types";
 import { toast } from "@/hooks/use-toast";
@@ -258,6 +258,14 @@ const Report = () => {
           </CollapsibleContent>
         </Card>
       </Collapsible>
+
+      {/* ── Try Again ── */}
+      <div className="flex justify-center pt-2 pb-8">
+        <Button size="lg" onClick={() => navigate("/interpret")} className="gap-2">
+          <ImagePlus className="h-5 w-5" />
+          再测一幅
+        </Button>
+      </div>
     </div>
   );
 };
