@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/cases" element={<Cases />} />
             <Route path="/plans" element={<Plans />} />
             <Route path="/interpret" element={<AiInterpret />} />
+            <Route path="/report/:id" element={<Report />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
