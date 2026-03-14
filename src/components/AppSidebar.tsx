@@ -7,6 +7,7 @@ import {
   Sparkles,
   History,
   Settings,
+  LogOut,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -16,10 +17,10 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -31,7 +32,6 @@ const items = [
   { title: "疗愈方案", url: "/plans", icon: ClipboardList },
   { title: "AI解读", url: "/interpret", icon: Sparkles },
   { title: "解读历史", url: "/history", icon: History },
-  { title: "设置", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -46,10 +46,22 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
+        {/* Logo & Title */}
+        <div className="p-4 pb-2">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+              <span className="text-lg">🪷</span>
+            </div>
+            {!collapsed && (
+              <div>
+                <h2 className="text-base font-serif font-bold text-foreground leading-tight">曼陀罗疗愈</h2>
+                <p className="text-xs text-muted-foreground">工作管理平台</p>
+              </div>
+            )}
+          </div>
+        </div>
+
         <SidebarGroup>
-          <SidebarGroupLabel className="font-serif text-primary">
-            疗愈师工作站
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -59,7 +71,7 @@ export function AppSidebar() {
                       to={item.url}
                       end={item.url === "/"}
                       className="hover:bg-muted/50 transition-colors"
-                      activeClassName="bg-primary/10 text-primary font-medium"
+                      activeClassName="bg-primary text-primary-foreground font-medium hover:bg-primary/90"
                     >
                       <item.icon className="mr-2 h-4 w-4" />
                       {!collapsed && <span>{item.title}</span>}
@@ -71,6 +83,29 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>
+        <div className="p-3 border-t border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-muted-foreground">
+                R
+              </div>
+              {!collapsed && (
+                <div>
+                  <p className="text-sm font-medium text-foreground">RanRan</p>
+                  <p className="text-xs text-muted-foreground">专业版</p>
+                </div>
+              )}
+            </div>
+            {!collapsed && (
+              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                <LogOut className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }
