@@ -16,6 +16,7 @@ const Dashboard = () => {
           icon={Users}
           description="本月新增 3 位"
           trend="↑ 12%"
+          variant="primary"
         />
         <StatCard
           title="个案记录"
@@ -28,6 +29,7 @@ const Dashboard = () => {
           value={15}
           icon={ClipboardList}
           description="进行中 8 个"
+          variant="secondary"
         />
         <StatCard
           title="AI 解读"
