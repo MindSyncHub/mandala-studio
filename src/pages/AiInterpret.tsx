@@ -134,12 +134,9 @@ const AiInterpret = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-serif font-bold flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" />
-          AI 曼陀罗解读
-        </h1>
+        <h1 className="text-2xl font-serif font-bold">AI 曼陀罗解读</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          上传曼陀罗画作，AI 将从色彩、结构、心理等维度进行深度解读
+          上传曼陀罗绘画作品，获取基于五行色彩体系的AI辅助解读
         </p>
       </div>
 

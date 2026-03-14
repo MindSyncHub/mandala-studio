@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Upload, X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface InterpretUploadProps {
@@ -49,12 +49,23 @@ const InterpretUpload = ({ preview, onDrop, onFileChange, onClear }: InterpretUp
       ) : (
         <div className="space-y-3 py-8">
           <div className="mx-auto h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Upload className="h-7 w-7 text-primary" />
+            <Sparkles className="h-7 w-7 text-primary" />
           </div>
-          <p className="text-sm font-medium">拖拽曼陀罗画作到此处</p>
+          <p className="text-sm font-medium">上传曼陀罗作品</p>
           <p className="text-xs text-muted-foreground">
-            或点击上传 · 支持 JPG / PNG · 最大 10MB
+            支持 JPG、PNG 格式，AI将从色彩、构图、五行等多维度进行深度解读
           </p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={(e) => {
+              e.stopPropagation();
+              inputRef.current?.click();
+            }}
+          >
+            选择图片上传
+          </Button>
         </div>
       )}
     </div>
