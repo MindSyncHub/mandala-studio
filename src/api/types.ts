@@ -21,6 +21,7 @@ export interface CreateInterpretationParams {
   painting_intention?: string;
   painting_feeling?: string;
   force_new?: boolean;
+  three_circles?: string;
 }
 
 export interface CreateInterpretationResponse {
@@ -48,6 +49,18 @@ export interface ReportResponse {
   ai_qa_context?: string;
   can_upgrade: boolean;
   upgrade_price?: number;
+  error?: string;
+}
+
+// ── Upgrade ─────────────────────────────────────────
+
+export interface UpgradeRequest {
+  model: string;
+}
+
+export interface UpgradeResponse {
+  success: boolean;
+  interpretation_id: string;
   error?: string;
 }
 

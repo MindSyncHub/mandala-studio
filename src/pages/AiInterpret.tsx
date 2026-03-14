@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Loader2, Circle } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -20,9 +20,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Card, CardContent } from "@/components/ui/card";
 import { useImageUpload } from "@/hooks/useImageUpload";
-import { createInterpretation } from "@/api";
-import type { CreateInterpretationResponse } from "@/api/types";
+import { createInterpretation, detectCircles } from "@/api";
+import type { CreateInterpretationResponse, DetectCirclesResponse } from "@/api/types";
 import InterpretUpload from "@/components/InterpretUpload";
 import FeatureCards from "@/components/FeatureCards";
 import { toast } from "@/hooks/use-toast";
@@ -43,9 +44,45 @@ const AiInterpret = () => {
   const [paintingFeeling, setPaintingFeeling] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // existing-conflict dialog state
+  // detect circles
+  const [detecting, setDetecting] = useState(false);
+  const [circlesData, setCirclesData] = useState<DetectCirclesResponse | null>(null);
+  const [threeCirclesJson, setThreeCirclesJson] = useState<string | undefined>(undefined);
+
+  // existing-conflict dialog
   const [conflictOpen, setConflictOpen] = useState(false);
   const [existingResult, setExistingResult] = useState<CreateInterpretationResponse | null>(null);
+
+  const handleDetectCircles = async () => {
+    if (!file) return;
+    setDetecting(true);
+    try {
+      const form = new FormData();
+      form.append("image", file);
+      form.append("use_ai", "true");
+      form.append("use_opencv", "true");
+      const res = await detectCircles(form);
+      setCirclesData(res);
+
+      if (res.circles.length >= 2) {
+        const sorted = [...res.circles].sort((a, b) => a.radius - b.radius);
+        const payload = {
+          inner_radius: sorted[0].radius,
+          middle_radius: sorted.length >= 3 ? sorted[1].radius : sorted[sorted.length - 1].radius,
+          outer_radius: sorted[sorted.length - 1].radius,
+        };
+        setThreeCirclesJson(JSON.stringify(payload));
+        toast({ title: "三圈检测完成", description: `检测到 ${res.circles.length} 个圆` });
+      } else {
+        setThreeCirclesJson(undefined);
+        toast({ title: "未检测到足够圆圈", description: "将不传入三圈数据", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "圆圈检测失败", variant: "destructive" });
+    } finally {
+      setDetecting(false);
+    }
+  };
 
   const submit = async (forceNew = false) => {
     if (!file) {
@@ -61,6 +98,7 @@ const AiInterpret = () => {
         painting_intention: paintingIntention || undefined,
         painting_feeling: paintingFeeling || undefined,
         force_new: forceNew || undefined,
+        three_circles: threeCirclesJson,
       });
 
       if (res.existing && !forceNew) {
@@ -79,14 +117,18 @@ const AiInterpret = () => {
 
   const handleUseExisting = () => {
     setConflictOpen(false);
-    if (existingResult) {
-      navigate(`/report/${existingResult.interpretation_id}`);
-    }
+    if (existingResult) navigate(`/report/${existingResult.interpretation_id}`);
   };
 
   const handleRegenerate = () => {
     setConflictOpen(false);
     submit(true);
+  };
+
+  const handleClear = () => {
+    clear();
+    setCirclesData(null);
+    setThreeCirclesJson(undefined);
   };
 
   return (
@@ -105,8 +147,47 @@ const AiInterpret = () => {
         preview={preview}
         onDrop={onDrop}
         onFileChange={onFileChange}
-        onClear={clear}
+        onClear={handleClear}
       />
+
+      {/* Detect circles step */}
+      {file && (
+        <Card>
+          <CardContent className="pt-6 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium flex items-center gap-2">
+                <Circle className="h-4 w-4 text-primary" />
+                三圈检测（可选）
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDetectCircles}
+                disabled={detecting}
+              >
+                {detecting ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+                {detecting ? "检测中…" : circlesData ? "重新检测" : "检测圆圈"}
+              </Button>
+            </div>
+            {circlesData && circlesData.circles.length >= 2 && (
+              <div className="text-sm text-muted-foreground space-y-1">
+                {(() => {
+                  const sorted = [...circlesData.circles].sort((a, b) => a.radius - b.radius);
+                  const inner = sorted[0].radius;
+                  const middle = sorted.length >= 3 ? sorted[1].radius : sorted[sorted.length - 1].radius;
+                  return (
+                    <>
+                      <p>内圈半径：{inner.toFixed(1)}px</p>
+                      <p>中圈半径：{middle.toFixed(1)}px</p>
+                      <p>内/中比例：{(inner / middle).toFixed(2)}</p>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Theme select */}
       <div>
