@@ -1,42 +1,92 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { Sparkles } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { createInterpretation } from "@/api";
 import type { CreateInterpretationResponse } from "@/api/types";
 import InterpretUpload from "@/components/InterpretUpload";
-import InterpretResult from "@/components/InterpretResult";
 import FeatureCards from "@/components/FeatureCards";
 import { toast } from "@/hooks/use-toast";
 
-const themes = ["全面解读", "财富", "情感", "健康", "事业", "性格"];
+const THEME_OPTIONS = [
+  { value: "general", label: "全面解读" },
+  { value: "intimate_relationship", label: "亲密关系" },
+  { value: "wealth_career", label: "财富事业" },
+  { value: "health_wellness", label: "健康养生" },
+  { value: "personal_growth", label: "个人成长" },
+];
 
 const AiInterpret = () => {
+  const navigate = useNavigate();
   const { file, preview, onDrop, onFileChange, clear } = useImageUpload();
-  const [theme, setTheme] = useState("全面解读");
+  const [theme, setTheme] = useState("general");
+  const [paintingIntention, setPaintingIntention] = useState("");
+  const [paintingFeeling, setPaintingFeeling] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<CreateInterpretationResponse | null>(null);
 
-  const handleInterpret = async () => {
+  // existing-conflict dialog state
+  const [conflictOpen, setConflictOpen] = useState(false);
+  const [existingResult, setExistingResult] = useState<CreateInterpretationResponse | null>(null);
+
+  const submit = async (forceNew = false) => {
     if (!file) {
       toast({ title: "请先上传图片", variant: "destructive" });
       return;
     }
     setLoading(true);
-    setResult(null);
     try {
       const res = await createInterpretation({
         image: file,
-        user_id: "therapist-demo",
-        theme: theme === "全面解读" ? undefined : theme,
+        user_id: "therapist_demo",
+        theme: theme === "general" ? undefined : theme,
+        painting_intention: paintingIntention || undefined,
+        painting_feeling: paintingFeeling || undefined,
+        force_new: forceNew || undefined,
       });
-      setResult(res);
+
+      if (res.existing && !forceNew) {
+        setExistingResult(res);
+        setConflictOpen(true);
+        return;
+      }
+
+      navigate(`/report/${res.interpretation_id}`);
     } catch {
       toast({ title: "解读失败", description: "请稍后重试", variant: "destructive" });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUseExisting = () => {
+    setConflictOpen(false);
+    if (existingResult) {
+      navigate(`/report/${existingResult.interpretation_id}`);
+    }
+  };
+
+  const handleRegenerate = () => {
+    setConflictOpen(false);
+    submit(true);
   };
 
   return (
@@ -58,24 +108,47 @@ const AiInterpret = () => {
         onClear={clear}
       />
 
+      {/* Theme select */}
       <div>
         <p className="text-sm font-medium mb-2">选择解读主题</p>
-        <div className="flex flex-wrap gap-2">
-          {themes.map((t) => (
-            <Badge
-              key={t}
-              variant={theme === t ? "default" : "outline"}
-              className="cursor-pointer transition-colors"
-              onClick={() => setTheme(t)}
-            >
-              {t}
-            </Badge>
-          ))}
+        <Select value={theme} onValueChange={setTheme}>
+          <SelectTrigger className="w-full sm:w-64">
+            <SelectValue placeholder="选择主题" />
+          </SelectTrigger>
+          <SelectContent>
+            {THEME_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Optional inputs */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <p className="text-sm font-medium mb-2">绘画意图（可选）</p>
+          <Textarea
+            placeholder="创作这幅画时，你想表达什么？"
+            value={paintingIntention}
+            onChange={(e) => setPaintingIntention(e.target.value)}
+            rows={3}
+          />
+        </div>
+        <div>
+          <p className="text-sm font-medium mb-2">绘画感受（可选）</p>
+          <Textarea
+            placeholder="画完之后，你有什么感受？"
+            value={paintingFeeling}
+            onChange={(e) => setPaintingFeeling(e.target.value)}
+            rows={3}
+          />
         </div>
       </div>
 
       <Button
-        onClick={handleInterpret}
+        onClick={() => submit()}
         disabled={!file || loading}
         className="w-full gap-2"
         size="lg"
@@ -84,9 +157,27 @@ const AiInterpret = () => {
         {loading ? "解读中…" : "开始解读"}
       </Button>
 
-      <InterpretResult result={result} loading={loading} />
+      {!loading && <FeatureCards />}
 
-      {!result && !loading && <FeatureCards />}
+      {/* Existing interpretation conflict dialog */}
+      <AlertDialog open={conflictOpen} onOpenChange={setConflictOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>已存在解读报告</AlertDialogTitle>
+            <AlertDialogDescription>
+              该图片已有一份解读报告，你可以直接查看旧报告，或重新生成一份新的解读。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleUseExisting}>
+              使用旧报告
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleRegenerate}>
+              重新生成
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

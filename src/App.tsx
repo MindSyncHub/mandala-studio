@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import AiInterpret from "./pages/AiInterpret";
+import Report from "./pages/Report";
 import HistoryPage from "./pages/History";
 import Clients from "./pages/Clients";
 import Schedule from "./pages/Schedule";
