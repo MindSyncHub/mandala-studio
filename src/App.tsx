@@ -5,6 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import AiInterpret from "./pages/AiInterpret";
+import HistoryPage from "./pages/History";
+import Clients from "./pages/Clients";
+import Schedule from "./pages/Schedule";
+import Cases from "./pages/Cases";
+import Plans from "./pages/Plans";
+import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,7 +25,13 @@ const App = () => (
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
-            {/* ADD NEW ROUTES HERE */}
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/cases" element={<Cases />} />
+            <Route path="/plans" element={<Plans />} />
+            <Route path="/interpret" element={<AiInterpret />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
