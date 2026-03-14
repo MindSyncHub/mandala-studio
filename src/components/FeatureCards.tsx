@@ -26,7 +26,7 @@ const features = [
 
 const FeatureCards = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {features.map((f) => (
         <Card key={f.title} className="card-gradient shadow-soft hover:shadow-warm transition-shadow">
           <CardContent className="p-5 flex items-start gap-4">
