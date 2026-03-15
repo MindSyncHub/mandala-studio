@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,31 +11,45 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { createInterpretation } from "@/api";
 import type { CreateInterpretationResponse } from "@/api/types";
 import InterpretUpload from "@/components/InterpretUpload";
-import InterpretForm from "@/components/InterpretForm";
+import ImageConfirmDialog from "@/components/ImageConfirmDialog";
+import ThreeCirclesPreview from "@/components/ThreeCirclesPreview";
 import CircleDetection from "@/components/CircleDetection";
 import type { CircleDetectionResult } from "@/components/CircleDetection";
+import InterpretForm from "@/components/InterpretForm";
 import FeatureCards from "@/components/FeatureCards";
 import { toast } from "@/hooks/use-toast";
 
 const AiInterpret = () => {
   const navigate = useNavigate();
-  const { file, preview, onDrop, onFileChange, clear } = useImageUpload();
+  const { file, preview, pendingPreview, onDrop, onFileChange, confirmPending, cancelPending, clear } = useImageUpload();
   const [theme, setTheme] = useState("general");
   const [paintingIntention, setPaintingIntention] = useState("");
   const [paintingFeeling, setPaintingFeeling] = useState("");
   const [loading, setLoading] = useState(false);
   const [circleResult, setCircleResult] = useState<CircleDetectionResult | undefined>(undefined);
+  const [circleVis, setCircleVis] = useState({ inner: 0, middle: 0, outer: 0, imgW: 0, imgH: 0 });
 
   const [conflictOpen, setConflictOpen] = useState(false);
   const [existingResult, setExistingResult] = useState<CreateInterpretationResponse | null>(null);
 
+  const handleCircleValues = useCallback((inner: number, middle: number, outer: number, imgW: number, imgH: number) => {
+    setCircleVis({ inner, middle, outer, imgW, imgH });
+  }, []);
+
+  const handleClear = () => {
+    clear();
+    setCircleResult(undefined);
+    setCircleVis({ inner: 0, middle: 0, outer: 0, imgW: 0, imgH: 0 });
+  };
+
   const submit = async (forceNew = false) => {
     if (!file || !circleResult) {
-      toast({ title: "请先完成三圈检测并确认参数", variant: "destructive" });
+      toast({ title: "请等待三圈检测完成", variant: "destructive" });
       return;
     }
     setLoading(true);
@@ -51,24 +65,17 @@ const AiInterpret = () => {
         three_circles_auto_detect: circleResult.autoDetect,
         three_circles_user_adjusted: circleResult.userAdjusted,
       });
-
       if (res.existing && !forceNew) {
         setExistingResult(res);
         setConflictOpen(true);
         return;
       }
-
       navigate(`/report/${res.interpretation_id}`);
     } catch {
       toast({ title: "解读失败", description: "请稍后重试", variant: "destructive" });
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleClear = () => {
-    clear();
-    setCircleResult(undefined);
   };
 
   return (
@@ -83,23 +90,53 @@ const AiInterpret = () => {
         </p>
       </div>
 
-      <InterpretUpload preview={preview} onDrop={onDrop} onFileChange={onFileChange} onClear={handleClear} />
+      {!file ? (
+        <InterpretUpload onDrop={onDrop} onFileChange={onFileChange} />
+      ) : (
+        <>
+          <div className="relative">
+            <ThreeCirclesPreview
+              previewUrl={preview!}
+              innerRadius={circleVis.inner}
+              middleRadius={circleVis.middle}
+              outerRadius={circleVis.outer}
+              imageWidth={circleVis.imgW}
+              imageHeight={circleVis.imgH}
+            />
+            <Button
+              variant="destructive"
+              size="icon"
+              className="absolute top-2 right-2 h-8 w-8 rounded-full z-10"
+              onClick={handleClear}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
 
-      {file && <CircleDetection file={file} onResult={setCircleResult} />}
+          <CircleDetection file={file} onResult={setCircleResult} onValuesChange={handleCircleValues} />
 
-      <InterpretForm
-        theme={theme}
-        onThemeChange={setTheme}
-        paintingIntention={paintingIntention}
-        onIntentionChange={setPaintingIntention}
-        paintingFeeling={paintingFeeling}
-        onFeelingChange={setPaintingFeeling}
-        canSubmit={!!file && !!circleResult}
-        loading={loading}
-        onSubmit={() => submit()}
+          <InterpretForm
+            theme={theme}
+            onThemeChange={setTheme}
+            paintingIntention={paintingIntention}
+            onIntentionChange={setPaintingIntention}
+            paintingFeeling={paintingFeeling}
+            onFeelingChange={setPaintingFeeling}
+            canSubmit={!!circleResult}
+            loading={loading}
+            onSubmit={() => submit()}
+          />
+        </>
+      )}
+
+      {!file && !loading && <FeatureCards />}
+
+      <ImageConfirmDialog
+        open={!!pendingPreview}
+        previewUrl={pendingPreview}
+        onConfirm={confirmPending}
+        onCancel={cancelPending}
       />
-
-      {!loading && <FeatureCards />}
 
       <AlertDialog open={conflictOpen} onOpenChange={setConflictOpen}>
         <AlertDialogContent>

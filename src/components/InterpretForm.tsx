@@ -1,13 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const THEME_OPTIONS = [
   { value: "general", label: "全面解读" },
@@ -45,19 +38,23 @@ const InterpretForm = ({
 }: InterpretFormProps) => (
   <>
     <div>
-      <p className="text-sm font-medium mb-2">选择解读主题</p>
-      <Select value={theme} onValueChange={onThemeChange}>
-        <SelectTrigger className="w-full sm:w-64">
-          <SelectValue placeholder="选择主题" />
-        </SelectTrigger>
-        <SelectContent>
-          {THEME_OPTIONS.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <p className="text-sm font-medium mb-3">选择解读主题</p>
+      <div className="flex flex-wrap gap-2">
+        {THEME_OPTIONS.map((opt) => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onThemeChange(opt.value)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              theme === opt.value
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
     </div>
 
     <div className="grid gap-4 sm:grid-cols-2">
