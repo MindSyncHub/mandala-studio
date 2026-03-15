@@ -20,6 +20,8 @@ export function createInterpretation(
   if (params.painting_feeling) form.append('painting_feeling', params.painting_feeling);
   if (params.force_new !== undefined) form.append('force_new', String(params.force_new));
   if (params.three_circles) form.append('three_circles', params.three_circles);
+  if (params.three_circles_auto_detect) form.append('three_circles_auto_detect', params.three_circles_auto_detect);
+  if (params.three_circles_user_adjusted !== undefined) form.append('three_circles_user_adjusted', String(params.three_circles_user_adjusted));
 
   return apiClient.postForm<CreateInterpretationResponse>('/api/v2/interpretations', form);
 }
