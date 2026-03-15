@@ -2,6 +2,7 @@ import { apiClient } from './client';
 import type {
   CreateInterpretationParams,
   CreateInterpretationResponse,
+  InterpretationSummary,
   ReportResponse,
   ReportVersion,
   TherapistNotesResponse,
@@ -49,5 +50,13 @@ export function upgradeToPro(
   return apiClient.post<UpgradeResponse>(
     `/api/v2/interpretations/${interpretationId}/upgrade`,
     { model: 'kimi' },
+  );
+}
+
+export function getUserInterpretations(
+  userId: string,
+): Promise<InterpretationSummary[]> {
+  return apiClient.get<InterpretationSummary[]>(
+    `/api/v2/users/${userId}/interpretations`,
   );
 }

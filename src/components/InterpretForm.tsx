@@ -12,6 +12,9 @@ import {
 const THEME_OPTIONS = [
   { value: "general", label: "全面解读" },
   { value: "intimate_relationship", label: "亲密关系" },
+  { value: "father_relationship", label: "父亲关系" },
+  { value: "mother_relationship", label: "母亲关系" },
+  { value: "parent_child_relationship", label: "亲子关系" },
   { value: "wealth_career", label: "财富事业" },
   { value: "health_wellness", label: "健康养生" },
   { value: "personal_growth", label: "个人成长" },
