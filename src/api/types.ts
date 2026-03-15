@@ -80,6 +80,7 @@ export interface TherapistNotesResponse {
   description: string;
   painting_focus: string;
   core_intervention: string;
+  imbalance_type?: string;
   phases: TherapistPhase[];
   observation_checklist: string[];
   contraindications: string[];
