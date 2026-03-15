@@ -1,28 +1,21 @@
 
 
-## 分析结果：所有要求已满足
+## 分析结果：所有要求已满足，无需修改
 
-经过逐文件核查，当前代码已完全符合你列出的全部 P0 要求：
+经核查，当前代码已完全实现你列出的三点要求：
 
-### 1. 类型定义 (`src/api/types.ts`) ✅ 已正确
-- `TherapistPhase`：`goal: string`、`therapist_tasks: string[]`、`key_points: string[]`、`dialogue_examples: DialogueExample[]`（对象数组，含 `场景?` 和 `话术?`）
-- `TherapistNotesResponse`：已包含 `imbalance_type?: string`
-- `PricingResponse`：`{ lite: number; pro: number; upgrade_diff: number }`
+### 1. 三圈检测为必做步骤 ✅
+- `AiInterpret.tsx` 第 97 行：`canSubmit={!!file && !!circleResult}`，无 file 或未确认三圈时按钮禁用
+- `submit` 函数第 37 行：`if (!file || !circleResult)` 再次守卫
+- `CircleDetection` 组件：检测后展示滑块+数值输入供调整，必须点「确认三圈参数」才会调用 `onResult`，否则 `circleResult` 为 `undefined`
 
-### 2. 疗愈师参考渲染 (`src/components/TherapistNotes.tsx`) ✅ 已正确
-- 使用 `phase.goal`（非 goals）
-- 使用 `phase.therapist_tasks`（非 tasks）
-- 已展示 `phase.key_points`
-- `dialogue_examples` 按「场景：xxx」「话术：xxx」渲染
+### 2. FormData 三个字段 ✅
+- `three_circles`：`circleResult.threeCircles`（JSON 字符串，含 inner_radius/middle_radius/outer_radius）
+- `three_circles_auto_detect`：`circleResult.autoDetect`（原始检测值的 JSON 字符串）
+- `three_circles_user_adjusted`：`circleResult.userAdjusted`（布尔值，通过 `String()` 转换后 append 到 FormData）
 
-### 3. 定价类型 ✅ 已正确
-- `PricingResponse` 为 `{ lite: number; pro: number; upgrade_diff: number }`
+### 3. 未编辑时 userAdjusted = false ✅
+- `CircleDetection` 第 75-78 行：比较 editedValues 与 autoValues 各字段差值是否 > 0.01，未编辑则 `isAdjusted = false`，此时 `threeCircles` 与 `autoDetect` 内容相同
 
-### 4. 定价展示
-- `ReportCard.tsx` 使用 `report.upgrade_price` 展示升级差价
-- `getPricing` API 已定义但尚未在任何页面调用展示 lite/pro/upgrade_diff
-
-### 结论
-
-**无需修改。** 所有类型定义、渲染逻辑均已与后端一致。如果你希望在某个页面（如解读上传页）展示完整定价信息（Lite 版 ¥xx / Pro 版 ¥xx / 升级差价 ¥xx），可以告诉我具体放在哪里。
+**结论：无需修改。**
 
