@@ -12,6 +12,10 @@ import Clients from "./pages/Clients";
 import Schedule from "./pages/Schedule";
 import Cases from "./pages/Cases";
 import Plans from "./pages/Plans";
+import CasePlan from "./pages/CasePlan";
+import LongTermPlan from "./pages/LongTermPlan";
+import Salon from "./pages/Salon";
+import PrivateCoach from "./pages/PrivateCoach";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -31,6 +35,10 @@ const App = () => (
             <Route path="/clients" element={<Clients />} />
             <Route path="/cases" element={<Cases />} />
             <Route path="/plans" element={<Plans />} />
+            <Route path="/case-plan" element={<CasePlan />} />
+            <Route path="/long-term-plan" element={<LongTermPlan />} />
+            <Route path="/salon" element={<Salon />} />
+            <Route path="/private-coach" element={<PrivateCoach />} />
             <Route path="/interpret" element={<AiInterpret />} />
             <Route path="/report/:id" element={<Report />} />
             <Route path="/history" element={<HistoryPage />} />
