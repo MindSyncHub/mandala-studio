@@ -2,6 +2,7 @@ import { apiClient } from './client';
 import type {
   CreateInterpretationParams,
   CreateInterpretationResponse,
+  InterpretationSummary,
   ReportResponse,
   ReportVersion,
   TherapistNotesResponse,

@@ -85,6 +85,17 @@ export interface TherapistNotesResponse {
   contraindications: string[];
 }
 
+// ── History / User Interpretations ───────────────────
+
+export interface InterpretationSummary {
+  interpretation_id: string;
+  title?: string;
+  theme?: string;
+  version: 'lite' | 'pro';
+  created_at: string;
+  thumbnail_url?: string;
+}
+
 // ── Detect Circles ───────────────────────────────────
 
 export interface DetectedCircle {
