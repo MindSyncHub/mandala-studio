@@ -12,6 +12,10 @@ import Clients from "./pages/Clients";
 import Schedule from "./pages/Schedule";
 import Cases from "./pages/Cases";
 import Plans from "./pages/Plans";
+import CasePlan from "./pages/CasePlan";
+import LongTermPlan from "./pages/LongTermPlan";
+import Salon from "./pages/Salon";
+import PrivateCoach from "./pages/PrivateCoach";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
