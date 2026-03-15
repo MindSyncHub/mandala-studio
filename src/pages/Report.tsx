@@ -16,17 +16,14 @@ const Report = () => {
   const [error, setError] = useState<string | null>(null);
   const [upgrading, setUpgrading] = useState(false);
 
-  const fetchReport = useCallback(
-    (version?: "lite" | "pro") => {
-      if (!id) return;
-      setLoading(true);
-      getReport(id, version)
-        .then(setReport)
-        .catch(() => setError("无法加载报告，请稍后重试"))
-        .finally(() => setLoading(false));
-    },
-    [id],
-  );
+  const fetchReport = useCallback(() => {
+    if (!id) return;
+    setLoading(true);
+    getReport(id, "pro")
+      .then(setReport)
+      .catch(() => setError("无法加载报告，请稍后重试"))
+      .finally(() => setLoading(false));
+  }, [id]);
 
   useEffect(() => {
     fetchReport();
