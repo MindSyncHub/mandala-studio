@@ -16,6 +16,8 @@ export interface CreateInterpretationParams {
   painting_feeling?: string;
   force_new?: boolean;
   three_circles?: string;
+  three_circles_auto_detect?: string;
+  three_circles_user_adjusted?: boolean;
 }
 
 export interface CreateInterpretationResponse {

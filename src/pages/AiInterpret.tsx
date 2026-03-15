@@ -17,6 +17,7 @@ import type { CreateInterpretationResponse } from "@/api/types";
 import InterpretUpload from "@/components/InterpretUpload";
 import InterpretForm from "@/components/InterpretForm";
 import CircleDetection from "@/components/CircleDetection";
+import type { CircleDetectionResult } from "@/components/CircleDetection";
 import FeatureCards from "@/components/FeatureCards";
 import { toast } from "@/hooks/use-toast";
 
@@ -27,14 +28,14 @@ const AiInterpret = () => {
   const [paintingIntention, setPaintingIntention] = useState("");
   const [paintingFeeling, setPaintingFeeling] = useState("");
   const [loading, setLoading] = useState(false);
-  const [threeCirclesJson, setThreeCirclesJson] = useState<string | undefined>(undefined);
+  const [circleResult, setCircleResult] = useState<CircleDetectionResult | undefined>(undefined);
 
   const [conflictOpen, setConflictOpen] = useState(false);
   const [existingResult, setExistingResult] = useState<CreateInterpretationResponse | null>(null);
 
   const submit = async (forceNew = false) => {
-    if (!file) {
-      toast({ title: "请先上传图片", variant: "destructive" });
+    if (!file || !circleResult) {
+      toast({ title: "请先完成三圈检测并确认参数", variant: "destructive" });
       return;
     }
     setLoading(true);
@@ -46,7 +47,9 @@ const AiInterpret = () => {
         painting_intention: paintingIntention || undefined,
         painting_feeling: paintingFeeling || undefined,
         force_new: forceNew || undefined,
-        three_circles: threeCirclesJson,
+        three_circles: circleResult.threeCircles,
+        three_circles_auto_detect: circleResult.autoDetect,
+        three_circles_user_adjusted: circleResult.userAdjusted,
       });
 
       if (res.existing && !forceNew) {
@@ -65,7 +68,7 @@ const AiInterpret = () => {
 
   const handleClear = () => {
     clear();
-    setThreeCirclesJson(undefined);
+    setCircleResult(undefined);
   };
 
   return (
@@ -82,7 +85,7 @@ const AiInterpret = () => {
 
       <InterpretUpload preview={preview} onDrop={onDrop} onFileChange={onFileChange} onClear={handleClear} />
 
-      {file && <CircleDetection file={file} onResult={setThreeCirclesJson} />}
+      {file && <CircleDetection file={file} onResult={setCircleResult} />}
 
       <InterpretForm
         theme={theme}
@@ -91,7 +94,7 @@ const AiInterpret = () => {
         onIntentionChange={setPaintingIntention}
         paintingFeeling={paintingFeeling}
         onFeelingChange={setPaintingFeeling}
-        canSubmit={!!file}
+        canSubmit={!!file && !!circleResult}
         loading={loading}
         onSubmit={() => submit()}
       />
