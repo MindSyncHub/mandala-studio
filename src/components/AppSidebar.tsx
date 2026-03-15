@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "工作台", url: "/", icon: LayoutDashboard },
+  { title: "工作台", url: "/dashboard", icon: LayoutDashboard },
   { title: "日程管理", url: "/schedule", icon: CalendarDays },
   { title: "客户管理", url: "/clients", icon: Users },
   { title: "个案记录", url: "/cases", icon: FileText },
