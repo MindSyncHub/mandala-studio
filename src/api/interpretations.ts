@@ -52,3 +52,11 @@ export function upgradeToPro(
     { model: 'kimi' },
   );
 }
+
+export function getUserInterpretations(
+  userId: string,
+): Promise<InterpretationSummary[]> {
+  return apiClient.get<InterpretationSummary[]>(
+    `/api/v2/users/${userId}/interpretations`,
+  );
+}
