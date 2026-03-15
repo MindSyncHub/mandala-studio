@@ -1,14 +1,8 @@
 // ── Pricing ──────────────────────────────────────────
 
-export interface PricingTier {
-  price: number;
-  currency: string;
-  features: string[];
-}
-
 export interface PricingResponse {
-  lite: PricingTier;
-  pro: PricingTier;
+  lite: number;
+  pro: number;
   upgrade_diff: number;
 }
 
@@ -66,11 +60,18 @@ export interface UpgradeResponse {
 
 // ── Therapist Notes ──────────────────────────────────
 
+export interface DialogueExample {
+  场景?: string;
+  话术?: string;
+}
+
 export interface TherapistPhase {
   name: string;
-  goals: string[];
-  tasks: string[];
-  dialogue_examples: string[];
+  duration: string;
+  goal: string;
+  therapist_tasks: string[];
+  key_points: string[];
+  dialogue_examples: DialogueExample[];
 }
 
 export interface TherapistNotesResponse {
