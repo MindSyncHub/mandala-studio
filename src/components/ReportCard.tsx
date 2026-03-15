@@ -16,14 +16,13 @@ const ReportCard = ({ report, upgrading, onUpgrade }: ReportCardProps) => (
       <div className="flex items-start justify-between">
         <div>
           <CardTitle className="font-serif text-xl">
-            {report.title ?? "解读报告"}
+            {report.title ?? "AI 解读报告（Pro）"}
           </CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            版本：{report.version}
-            {report.can_upgrade && report.upgrade_price != null && (
-              <span className="ml-2">· 可升级至 Pro（¥{report.upgrade_price}）</span>
-            )}
-          </p>
+          {report.can_upgrade && report.upgrade_price != null && (
+            <p className="text-xs text-muted-foreground mt-1">
+              可升级至 Pro（¥{report.upgrade_price}）
+            </p>
+          )}
         </div>
         {report.can_upgrade && (
           <Button
